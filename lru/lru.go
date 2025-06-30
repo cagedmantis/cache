@@ -11,7 +11,7 @@ type entry[K comparable, T any] struct {
 }
 
 type Cache[K comparable, T any] struct {
-	mu sync.RWMutex
+	mu sync.Mutex
 
 	cap int
 	l   *list.List
@@ -27,8 +27,8 @@ func New[K comparable, T any](cap int) *Cache[K, T] {
 }
 
 func (c *Cache[K, T]) Get(key K) (T, bool) {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
+	c.mu.Lock()
+	defer c.mu.Unlock()
 
 	e, ok := c.m[key]
 	if !ok {
